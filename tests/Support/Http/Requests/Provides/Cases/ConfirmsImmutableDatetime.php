@@ -6,10 +6,10 @@ namespace Tests\Support\Http\Requests\Provides\Cases;
 
 use Carbon\CarbonImmutable;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Support\Http\Requests\Provides\CastsInputTest;
+use Tests\Support\Http\Requests\Concerns\Cases\ConfirmsInputCasting;
 
 /**
- * @mixin CastsInputTest
+ * @mixin ConfirmsInputCasting
  */
 trait ConfirmsImmutableDatetime
 {

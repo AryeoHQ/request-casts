@@ -8,15 +8,30 @@ use Illuminate\Database\Eloquent\Casts\AsEnumCollection;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Fixtures\Enum;
-use Tests\Support\Http\Requests\Provides\CastsInputTest;
+use Tests\Support\Http\Requests\Concerns\Cases\ConfirmsInputCasting;
 
 /**
- * @mixin CastsInputTest
+ * @mixin ConfirmsInputCasting
  */
 trait ConfirmsAsEnumCollection
 {
     #[Test]
-    public function it_can_cast_to_enum_collection(): void
+    public function it_can_cast_to_enum_collection_from_array(): void
+    {
+        $cases = collect(Enum::cases());
+
+        $this->request->mergeCasts([
+            'as_enum_collection' => AsEnumCollection::of(Enum::class),
+        ])->merge([
+            'as_enum_collection' => $cases->map->value->toArray(),
+        ]);
+
+        $this->assertInstanceOf(Collection::class, $this->request->as_enum_collection);
+        $this->assertContainsOnlyInstancesOf(Enum::class, $this->request->as_enum_collection);
+    }
+
+    #[Test]
+    public function it_can_cast_to_enum_collection_from_collection(): void
     {
         $cases = collect(Enum::cases());
 

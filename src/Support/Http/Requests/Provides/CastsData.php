@@ -19,7 +19,7 @@ trait CastsData
     }
 
     private Caster $casted {
-        get => $this->casted ??= Caster::make()->from($this)->prepare();
+        get => $this->casted ??= Caster::make()->mergeCasts($this->casts)->forceFill(parent::all());
     }
 
     /**
@@ -28,7 +28,20 @@ trait CastsData
      */
     public function all($keys = null): array
     {
-        return $this->casted->only($keys ?? $this->keys());
+        return [
+            ...parent::all($keys),
+            ...$this->casted->only($keys ?? $this->keys()),
+        ];
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $input
+     */
+    public function merge(array $input): self
+    {
+        $this->casted->forceFill($input);
+
+        return parent::merge($input);
     }
 
     /**
@@ -47,6 +60,8 @@ trait CastsData
     public function mergeCasts(array $casts): static
     {
         $this->casts = array_merge($this->casts, $casts);
+
+        $this->casted->mergeCasts($this->casts);
 
         return $this;
     }

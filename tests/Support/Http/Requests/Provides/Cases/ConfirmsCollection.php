@@ -6,17 +6,18 @@ namespace Tests\Support\Http\Requests\Provides\Cases;
 
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Support\Http\Requests\Provides\CastsInputTest;
+use Tests\Fixtures\Users\User;
+use Tests\Support\Http\Requests\Concerns\Cases\ConfirmsInputCasting;
 
 /**
- * @mixin CastsInputTest
+ * @mixin ConfirmsInputCasting
  */
 trait ConfirmsCollection
 {
     #[Test]
-    public function it_can_cast_to_collection(): void
+    public function it_can_cast_to_collection_from_collection(): void
     {
-        $data = ['a', 'b'];
+        $data = collect(['a', 'b']);
 
         $this->request->mergeCasts([
             'collection' => 'collection',
@@ -25,7 +26,22 @@ trait ConfirmsCollection
         ]);
 
         $this->assertInstanceOf(Collection::class, $this->request->collection);
-        $this->assertSame($data, $this->request->collection->toArray());
+        $this->assertSame($data->toArray(), $this->request->collection->toArray());
+    }
+
+    #[Test]
+    public function it_can_cast_to_collection_from_array(): void
+    {
+        $data = collect(['a', 'b']);
+
+        $this->request->mergeCasts([
+            'collection' => 'collection',
+        ])->merge([
+            'collection' => $data->toArray(),
+        ]);
+
+        $this->assertInstanceOf(Collection::class, $this->request->collection);
+        $this->assertSame($data->toArray(), $this->request->collection->toArray());
     }
 
     #[Test]
@@ -41,5 +57,20 @@ trait ConfirmsCollection
 
         $this->assertInstanceOf(Collection::class, $this->request->collection_from_json);
         $this->assertSame($data, $this->request->collection_from_json->toArray());
+    }
+
+    #[Test]
+    public function it_can_cast_to_collection_from_model(): void
+    {
+        $model = User::factory()->make();
+
+        $this->request->mergeCasts([
+            'collection_from_model' => 'collection',
+        ])->merge([
+            'collection_from_model' => $model,
+        ]);
+
+        $this->assertInstanceOf(Collection::class, $this->request->collection_from_model);
+        $this->assertSame($model->toArray(), $this->request->collection_from_model->toArray());
     }
 }
