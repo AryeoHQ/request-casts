@@ -7,10 +7,10 @@ namespace Tests\Support\Http\Requests\Provides\Cases;
 use Illuminate\Database\Eloquent\Casts\ArrayObject;
 use Illuminate\Database\Eloquent\Casts\AsEncryptedArrayObject;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Support\Http\Requests\Provides\CastsInputTest;
+use Tests\Support\Http\Requests\Concerns\Cases\ConfirmsInputCasting;
 
 /**
- * @mixin CastsInputTest
+ * @mixin ConfirmsInputCasting
  */
 trait ConfirmsAsEncryptedArrayObject
 {

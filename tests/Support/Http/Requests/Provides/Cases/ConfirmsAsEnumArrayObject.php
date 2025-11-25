@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Casts\ArrayObject;
 use Illuminate\Database\Eloquent\Casts\AsEnumArrayObject;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Fixtures\Enum;
-use Tests\Support\Http\Requests\Provides\CastsInputTest;
+use Tests\Support\Http\Requests\Concerns\Cases\ConfirmsInputCasting;
 
 /**
- * @mixin CastsInputTest
+ * @mixin ConfirmsInputCasting
  */
 trait ConfirmsAsEnumArrayObject
 {
