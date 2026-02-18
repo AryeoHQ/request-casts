@@ -7,7 +7,7 @@ namespace Tests\Support\Http\Requests\Provides\Cases;
 use Illuminate\Database\Eloquent\Casts\AsEnumCollection;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Fixtures\Enum;
+use Tests\Fixtures\Support\Enum;
 use Tests\Support\Http\Requests\Concerns\Cases\ConfirmsInputCasting;
 
 /**

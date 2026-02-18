@@ -7,7 +7,7 @@ namespace Tests\Support\Http\Requests\Provides\Cases;
 use Illuminate\Database\Eloquent\Casts\AsEncryptedCollection;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Fixtures\Users\User;
+use Tests\Fixtures\Support\Users\User;
 use Tests\Support\Http\Requests\Concerns\Cases\ConfirmsInputCasting;
 
 /**

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Support\Http\Requests\Provides\Cases;
 
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Fixtures\Users\User;
+use Tests\Fixtures\Support\Users\User;
 use Tests\Support\Http\Requests\Concerns\Cases\ConfirmsInputCasting;
 
 /**
