@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Support\Http\Requests;
 
-use Tests\Fixtures\FormRequest;
+use Tests\Fixtures\Support\FormRequest;
 use Tests\Support\Http\Requests\Concerns\Cases\ConfirmsInputCasting;
 use Tests\TestCase;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Fixtures;
+namespace Tests\Fixtures\Support;
 
 use AllowDynamicProperties;
 use Illuminate\Support\Fluent;
@@ -13,7 +13,7 @@ use Support\Http\Requests\Provides\CastsData;
  * @property Fluent<string, string> $fluent
  */
 #[AllowDynamicProperties]
-class FormRequest extends \Illuminate\Foundation\Http\FormRequest implements CastableData
+class Request extends \Illuminate\Http\Request implements CastableData
 {
     use CastsData;
 

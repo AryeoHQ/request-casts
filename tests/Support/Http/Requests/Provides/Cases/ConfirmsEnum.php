@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Support\Http\Requests\Provides\Cases;
 
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Fixtures\Enum;
+use Tests\Fixtures\Support\Enum;
 use Tests\Support\Http\Requests\Concerns\Cases\ConfirmsInputCasting;
 
 /**
