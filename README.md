@@ -3,10 +3,9 @@ This package extends Laravel’s request handling by bringing the power of Eloqu
 
 This means you can:
 - Use any of Laravel’s built-in or custom cast types (boolean, array, encrypted, datetime, etc.) directly on request data.
-- Safely work with typed values in your controllers and services while still preserving the original request payload for validation and error reporting.
 - Keep casting logic centralized and consistent across your application, reducing repetitive boilerplate for type conversions.
 
-Making request data behave more like Eloquent attributes helps you write cleaner, more predictable code while keeping validation and user input intact.
+Making request data behave more like Eloquent attributes helps you write cleaner, more predictable code.
 
 ## Installation
 You can install the package via Composer:
@@ -72,5 +71,101 @@ class Controller
 
         return response()->json($user);
     }
+}
+```
+
+## Accessing Data
+Casted values are available through the accessors you already use:
+
+| Accessor | Returns |
+|---|---|
+| `$request->field` | Casted |
+| `$request->all()` | Casted |
+| `$request->validated()` | Casted |
+| `$request->safe()` | Casted |
+| `$request->input()` | Raw |
+| `$request->query()` | Raw |
+| `$request->collect()` | Raw |
+
+Validation always runs against the **raw** input, so your rules see the original values. After validation passes, `validated()` and `safe()` return the casted versions of only the validated fields — giving you type-safe data without any extra work.
+
+Cast values are rich PHP types — `Carbon` instances, `Collection`s, backed enums, etc. — so you can call methods on them directly. When including cast values in a JSON response, they serialize automatically as long as the underlying type implements `JsonSerializable`. Laravel's built-in casts all satisfy this. If you write a custom cast whose `get()` returns an object, ensure it implements `JsonSerializable` so it serializes correctly at the response layer.
+
+## Nested Casting
+For complex request structures — nested objects, arrays of items, deeply nested paths — use `Nested::make()` to apply casts at any depth:
+
+```php
+use Support\Http\Casts\Nested;
+
+public function casts(): array
+{
+    return [
+        'user' => Nested::make([
+            'name' => 'string',
+            'age' => 'integer',
+            'is_active' => 'boolean',
+        ]),
+    ];
+}
+```
+
+Now `$request->user` returns an array with each key cast to its declared type.
+
+### Collections
+Use `*` to cast items in a collection:
+
+```php
+'items' => Nested::make([
+    '*.price' => 'float',
+    '*.quantity' => 'integer',
+]),
+```
+
+### Dot Notation
+Use dot notation to reach deeply nested paths:
+
+```php
+'filters' => Nested::make([
+    'price.min' => 'integer',
+    'price.max' => 'integer',
+    'geo.center.lat' => 'float',
+    'geo.center.lng' => 'float',
+]),
+```
+
+### Any Cast Type
+Any cast that works on a flat request attribute works as a leaf value inside `Nested::make()` — primitives, `Castable` classes, `CastsAttributes` implementations, and enums:
+
+```php
+use Illuminate\Database\Eloquent\Casts\AsCollection;
+
+'user' => Nested::make([
+    'tags' => AsCollection::class,
+    'role' => MyEnum::class,
+    'age' => 'integer',
+]),
+```
+
+### Combining Everything
+All of these compose naturally. Here's a real-world search endpoint:
+
+```php
+public function casts(): array
+{
+    return [
+        'per_page' => 'integer',
+        'query' => 'string',
+        'filters' => Nested::make([
+            'price.min' => 'integer',
+            'price.max' => 'integer',
+            'bedrooms' => 'integer',
+            'bathrooms' => 'float',
+            'is_active' => 'boolean',
+            'tags.*.label' => 'string',
+            'geo.radius' => 'float',
+            'geo.center.lat' => 'float',
+            'geo.center.lng' => 'float',
+        ]),
+    ];
 }
 ```
