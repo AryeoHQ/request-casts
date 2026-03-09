@@ -36,6 +36,7 @@ trait ConfirmsInputCasting
     use Provides\Cases\ConfirmsImmutableDate;
     use Provides\Cases\ConfirmsImmutableDatetime;
     use Provides\Cases\ConfirmsInteger;
+    use Provides\Cases\ConfirmsNested;
     use Provides\Cases\ConfirmsObject;
     use Provides\Cases\ConfirmsReal;
     use Provides\Cases\ConfirmsString;
