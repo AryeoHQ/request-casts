@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Support\Http\Requests\Provides;
 
-use Illuminate\Support\ValidatedInput;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Support\Http\Requests\Caster;
+use Support\Http\Requests\CastingValidator;
 
 /**
  * @mixin \Illuminate\Foundation\Http\FormRequest
@@ -43,32 +45,11 @@ trait CastsData
         return parent::all();
     }
 
-    /**
-     * @param  array<array-key, string>|int|string|null  $key
-     * @param  mixed  $default
-     */
-    public function validated($key = null, $default = null): mixed
+    public function setValidator(Validator $validator): static
     {
-        $validated = $this->validator->validated();
+        throw_unless($this instanceof FormRequest, \BadMethodCallException::class, 'setValidator is only supported on FormRequest.');
 
-        return data_get(
-            [...$validated, ...$this->casted->only(array_keys($validated))],
-            $key,
-            $default
-        );
-    }
-
-    /**
-     * @param  array<array-key, string>|null  $keys
-     * @return ($keys is null ? ValidatedInput : array<string, mixed>)
-     */
-    public function safe(null|array $keys = null): ValidatedInput|array
-    {
-        $validated = $this->validated();
-
-        return is_array($keys)
-            ? (new ValidatedInput($validated))->only($keys)
-            : new ValidatedInput($validated);
+        return parent::setValidator(new CastingValidator($validator, $this->casted)); // @phpstan-ignore staticMethod.notFound
     }
 
     /**
