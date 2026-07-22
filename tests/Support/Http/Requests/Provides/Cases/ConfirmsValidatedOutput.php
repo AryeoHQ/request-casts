@@ -153,4 +153,38 @@ trait ConfirmsValidatedOutput
         $this->assertSame(100, $filters['price']['min']);
         $this->assertSame(500, $filters['price']['max']);
     }
+
+    #[Test]
+    public function it_only_returns_validated_nested_keys_from_validated(): void
+    {
+        $input = [
+            'filters' => [
+                'search' => 'kitchen',
+                'status' => 'published',
+            ],
+        ];
+
+        $rules = [
+            'filters' => ['array'],
+            'filters.search' => ['sometimes', 'string'],
+        ];
+
+        $casts = [
+            'filters' => Nested::make([
+                'search' => 'string',
+            ]),
+        ];
+
+        $this->request->mergeCasts($casts)->merge($input);
+
+        $this->request->setValidator(
+            Validator::make($this->request->validationData(), $rules)
+        );
+
+        $this->assertSame([
+            'filters' => [
+                'search' => 'kitchen',
+            ],
+        ], $this->request->validated());
+    }
 }

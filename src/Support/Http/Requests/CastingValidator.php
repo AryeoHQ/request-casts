@@ -26,8 +26,9 @@ class CastingValidator implements Validator
     public function validated(): array
     {
         $validated = $this->inner->validated();
+        $casted = $this->caster->only(array_keys($validated));
 
-        return [...$validated, ...$this->caster->only(array_keys($validated))];
+        return $this->overlayCastedValues($validated, $casted);
     }
 
     /**
@@ -114,5 +115,25 @@ class CastingValidator implements Validator
     public function __get(string $name): mixed
     {
         return $this->inner->{$name};
+    }
+
+    /**
+     * @param  array<string|int, mixed>  $validated
+     * @param  array<string|int, mixed>  $casted
+     * @return array<string|int, mixed>
+     */
+    private function overlayCastedValues(array $validated, array $casted): array
+    {
+        foreach ($validated as $key => $value) {
+            if (! array_key_exists($key, $casted)) {
+                continue;
+            }
+
+            $validated[$key] = is_array($value) && is_array($casted[$key])
+                ? $this->overlayCastedValues($value, $casted[$key])
+                : $casted[$key];
+        }
+
+        return $validated;
     }
 }
