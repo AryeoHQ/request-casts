@@ -2,7 +2,7 @@
     "name": "aryeo/request-casts",
     "description": "Eloquent-style casting for Laravel request input.",
     "type": "library",
-    "license": "proprietary",
+    "license": "MIT",
     "repositories": {
         "tooling-laravel": {
             "type": "vcs",
@@ -10,6 +10,7 @@
         }
     },
     "require": {
+        "php": "^8.4",
         "laravel/framework": "^12.37 || ^13"
     },
     "require-dev": {
