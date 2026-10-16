@@ -1,6 +1,8 @@
 {
     "name": "aryeo/request-casts",
+    "description": "Eloquent-style casting for Laravel request input.",
     "type": "library",
+    "license": "proprietary",
     "repositories": {
         "tooling-laravel": {
             "type": "vcs",
@@ -12,7 +14,7 @@
     },
     "require-dev": {
         "orchestra/testbench": "^10.6 || ^11",
-        "aryeo/tooling-laravel": "0.0.40",
+        "aryeo/tooling-laravel": "0.0.41",
         "phpunit/phpunit": "^12.4.1 || ^13",
         "nesbot/carbon": "^3.10",
         "orchestra/testbench-core": "^10.7 || ^11",
