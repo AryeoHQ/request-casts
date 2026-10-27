@@ -69,8 +69,15 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         php: [8.5]
+        laravel: [12.*, 13.*]
+        stability: [prefer-stable, prefer-lowest]
+        include:
+          - laravel: 12.*
+            testbench: 10.*
+          - laravel: 13.*
+            testbench: 11.*
 
-    name: P${{ matrix.php }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout ref
@@ -83,7 +90,9 @@ jobs:
           coverage: pcov
 
       - name: Install Composer dependencies
-        run: php-ci composer update --no-interaction
+        run: |
+          php-ci composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          php-ci composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List installed Composer dependencies
         run: php-ci composer show -D
